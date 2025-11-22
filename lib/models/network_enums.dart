@@ -21,24 +21,18 @@ enum NetworkType {
   /// Unknown connection type
   unknown;
 
+  static final Map<String, NetworkType> _stringToNetworkTypeMap = {
+    'wifi': NetworkType.wifi,
+    'mobile': NetworkType.mobile,
+    'cellular': NetworkType.mobile,
+    'ethernet': NetworkType.ethernet,
+    'vpn': NetworkType.vpn,
+    'bluetooth': NetworkType.bluetooth,
+    'none': NetworkType.none,
+  };
+
   static NetworkType fromString(String value) {
-    switch (value.toLowerCase()) {
-      case 'wifi':
-        return NetworkType.wifi;
-      case 'mobile':
-      case 'cellular':
-        return NetworkType.mobile;
-      case 'ethernet':
-        return NetworkType.ethernet;
-      case 'vpn':
-        return NetworkType.vpn;
-      case 'bluetooth':
-        return NetworkType.bluetooth;
-      case 'none':
-        return NetworkType.none;
-      default:
-        return NetworkType.unknown;
-    }
+    return _stringToNetworkTypeMap[value.toLowerCase()] ?? NetworkType.unknown;
   }
 }
 
@@ -54,16 +48,7 @@ enum ConnectionStatus {
   connecting;
 
   static ConnectionStatus fromString(String value) {
-    switch (value.toLowerCase()) {
-      case 'connected':
-        return ConnectionStatus.connected;
-      case 'disconnected':
-        return ConnectionStatus.disconnected;
-      case 'connecting':
-        return ConnectionStatus.connecting;
-      default:
-        return ConnectionStatus.disconnected;
-    }
+    return ConnectionStatus.values.firstWhere((e) => e.name.toLowerCase() == value.toLowerCase(), orElse: () => ConnectionStatus.disconnected);
   }
 }
 
@@ -92,40 +77,24 @@ enum WifiSecurity {
 
   static WifiSecurity fromString(String value) {
     final lower = value.toLowerCase();
-    if (lower.contains('wpa3')) {
-      if (lower.contains('wpa2')) {
-        return WifiSecurity.wpa2Wpa3;
-      }
-      return WifiSecurity.wpa3;
-    } else if (lower.contains('wpa2')) {
-      return WifiSecurity.wpa2;
-    } else if (lower.contains('wpa')) {
-      return WifiSecurity.wpa;
-    } else if (lower.contains('wep')) {
-      return WifiSecurity.wep;
-    } else if (lower.contains('open') || lower.contains('none')) {
-      return WifiSecurity.open;
-    }
+    if (lower.contains('wpa3')) return lower.contains('wpa2') ? WifiSecurity.wpa2Wpa3 : WifiSecurity.wpa3;
+    if (lower.contains('wpa2')) return WifiSecurity.wpa2;
+    if (lower.contains('wpa')) return WifiSecurity.wpa;
+    if (lower.contains('wep')) return WifiSecurity.wep;
+    if (lower.contains('open') || lower.contains('none')) return WifiSecurity.open;
     return WifiSecurity.unknown;
   }
 
   /// Returns a user-friendly display name
   String get displayName {
-    switch (this) {
-      case WifiSecurity.open:
+    if (this != WifiSecurity.unknown && this != WifiSecurity.open) {
+      return name.toUpperCase();
+    } else {
+      if (this == WifiSecurity.open) {
         return 'Open';
-      case WifiSecurity.wep:
-        return 'WEP';
-      case WifiSecurity.wpa:
-        return 'WPA';
-      case WifiSecurity.wpa2:
-        return 'WPA2';
-      case WifiSecurity.wpa3:
-        return 'WPA3';
-      case WifiSecurity.wpa2Wpa3:
-        return 'WPA2/WPA3';
-      case WifiSecurity.unknown:
+      } else {
         return 'Unknown';
+      }
     }
   }
 }

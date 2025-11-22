@@ -1,7 +1,9 @@
+import 'package:equatable/equatable.dart';
+
 import 'network_enums.dart';
 
 /// Represents a Wi-Fi network discovered during scanning.
-class WifiNetwork {
+class WifiNetwork extends Equatable {
   /// Network name (SSID)
   final String ssid;
 
@@ -108,13 +110,7 @@ class WifiNetwork {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is WifiNetwork && other.ssid == ssid && other.bssid == bssid;
-  }
-
-  @override
-  int get hashCode => Object.hash(ssid, bssid);
+  List<Object?> get props => [ssid, bssid];
 
   /// Creates a copy of this WifiNetwork with optional field replacements
   WifiNetwork copyWith({

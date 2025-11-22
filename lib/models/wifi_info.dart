@@ -1,7 +1,9 @@
+import 'package:equatable/equatable.dart';
+
 import 'network_enums.dart';
 
 /// Represents detailed information about the current Wi-Fi connection.
-class WifiInfo {
+class WifiInfo extends Equatable {
   /// Network name (SSID)
   final String? ssid;
 
@@ -118,13 +120,7 @@ class WifiInfo {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is WifiInfo && other.ssid == ssid && other.bssid == bssid && other.ipAddress == ipAddress;
-  }
-
-  @override
-  int get hashCode => Object.hash(ssid, bssid, ipAddress);
+  List<Object?> get props => [ssid, bssid, ipAddress];
 
   /// Creates a copy of this WifiInfo with optional field replacements
   WifiInfo copyWith({

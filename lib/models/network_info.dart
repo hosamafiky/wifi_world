@@ -1,7 +1,9 @@
+import 'package:equatable/equatable.dart';
+
 import 'network_enums.dart';
 
 /// Represents general network connectivity information.
-class NetworkInfo {
+class NetworkInfo extends Equatable {
   /// The type of network connection
   final NetworkType networkType;
 
@@ -57,17 +59,7 @@ class NetworkInfo {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is NetworkInfo &&
-        other.networkType == networkType &&
-        other.connectionStatus == connectionStatus &&
-        other.isInternetAvailable == isInternetAvailable &&
-        other.isMetered == isMetered;
-  }
-
-  @override
-  int get hashCode => Object.hash(networkType, connectionStatus, isInternetAvailable, isMetered);
+  List<Object?> get props => [networkType, connectionStatus, isInternetAvailable, isMetered];
 
   /// Creates a copy of this NetworkInfo with optional field replacements
   NetworkInfo copyWith({NetworkType? networkType, ConnectionStatus? connectionStatus, bool? isInternetAvailable, bool? isMetered, String? interfaceName}) {
